@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Section</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .upload-container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .plus-sign {
+            font-size: 50px;
+            cursor: pointer;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .upload-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .upload-btn:hover {
+            background-color: #218838;
+        }
+        #uploaded-content {
+            margin-top: 20px;
+        }
+        .uploaded-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px auto;
+            width: 300px;
+            text-align: left;
+        }
+        .uploaded-item img {
+            width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Upload Your QR</h2>
+    <div class="upload-container">
+        <label for="file-input" class="plus-sign">+</label>
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+        <input type="text" id="name" placeholder="Enter Name">
+        <textarea id="description" placeholder="Enter Description"></textarea>
+        <select id="options">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        <button class="upload-btn" onclick="uploadContent()">Upload</button>
+    </div>
+
+    <div id="uploaded-content"></div>
+
+    <script>
+        function uploadContent() {
+            let fileInput = document.getElementById("file-input");
+            let name = document.getElementById("name").value;
+            let description = document.getElementById("description").value;
+            let option = document.getElementById("options").value;
+            let uploadedContent = document.getElementById("uploaded-content");
+
+            if (!fileInput.files.length) {
+                alert("Please select a photo to upload!");
+                return;
+            }
+
+            let file = fileInput.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                let imageSrc = e.target.result;
+                let newItem = document.createElement("div");
+                newItem.className = "uploaded-item";
+                newItem.innerHTML = `
+                    <img src="${imageSrc}" alt="Uploaded Image">
+                    <h4>${name}</h4>
+                    <p>${description}</p>
+                    <small>Privacy: ${option}</small>
+                `;
+                uploadedContent.appendChild(newItem);
+            };
+
+            reader.readAsDataURL(file);
+
+            // Clear input fields after upload
+            fileInput.value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("options").value = "public";
+        }
+    </script>
+
+</body>
+</html>
